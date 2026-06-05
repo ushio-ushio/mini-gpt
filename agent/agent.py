@@ -17,14 +17,14 @@ def agent_reasoning_node(state: AgentState) -> dict:
     
     history = "\n".join([f"{m.type}: {m.content}" for m in state["messages"]])
     
-    system_prompt = """你是一个专业的文档分析智能体。你可以使用工具来获取信息。
+    system_prompt = """你是一个专业的学习辅导智能体导师。你可以使用工具来获取学习资料。
 规则如下：
-1. 如果你需要读取文件，请严格按照此格式输出：[CALL_TOOL]: read_local_document(文件路径)
-2. 如果你已经掌握了足够的信息，可以直接回答用户的问题。
+1. 如果你需要读取学习材料文件，请严格按照此格式输出：[CALL_TOOL]: read_local_document(文件路径)
+2. 当你通过工具掌握了文档内容后，你的任务不是简单地总结内容，而是根据文档内容向用户提出 2 到 3 个具有启发性的问题，来考核用户的学习情况。
 
 当前对话历史：
 {history}
-请给出你的思考或回答："""
+请给出你的思考，或者向用户提出问题："""
 
     prompt = system_prompt.format(history=history)
     
@@ -43,7 +43,7 @@ def tool_execution_node(state: AgentState) -> dict:
     
     tool_result = read_local_document(file_path)
     
-    return {"messages": [SystemMessage(content=f"工具执行结果：{tool_result} \n请根据此结果回答用户。")]}
+    return {"messages": [SystemMessage(content=f"工具执行结果：{tool_result} \n请根据此材料内容，向用户提出启发式的问题以考核对方。")]}
 
 def should_continue_router(state: AgentState) -> str:
     last_message = state["messages"][-1].content
@@ -74,9 +74,9 @@ workflow.add_edge("tool", "agent")
 app_agent = workflow.compile()
 
 if __name__ == "__main__":
-    print("启动本地私有化文档分析 Agent 系统...")
+    print("启动本地私有化学习辅导 Agent 系统...")
     
-    user_input = "请帮我提取一下本地的 data/华智招新.pdf 文件里说了什么？"
+    user_input = "我刚刚学习了 data/华智招新.pdf 文件里的内容，请你根据里面的内容考考我吧。"
     print(f"\n用户: {user_input}")
     
     initial_state = {"messages": [HumanMessage(content=user_input)]}

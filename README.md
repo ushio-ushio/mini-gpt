@@ -26,7 +26,7 @@ MiniGPT 采用了标准的 **Decoder-Only Transformer** 架构，即自回归语
 
 - **`api.py`**: FastAPI 后端服务。自动加载 `checkpoints/pretrain.pt` 权重，并通过端点对外提供文本生成服务（`/generate`）。
 - **`llm.py`**: 基于 LangChain `BaseLLM` 封装的本地模型桥梁（`LocalDecoderLLM`），能让 LangChain 节点透明地调用本地部署的 API。
-- **`agent.py`**: 基于 LangGraph 的智能体工作流。实现了一个具有思考与工具调用能力的 Agent（例如读取并解析本地文档）。
+- **`agent.py`**: 基于 LangGraph 的智能体工作流。实现了一个具有主动辅导与工具调用能力的 Agent（不仅能读取本地文档，还能根据材料自动向用户反向提出启发式学习考核问题）。
 
 ## 快速开始
 
@@ -76,7 +76,7 @@ cd agent
 python agent.py
 ```
 
-你将看到控制台打印智能体的思考过程以及工具调用结果（如调用 `read_local_document` 读取文件）。
+你将看到控制台打印智能体的思考过程、工具调用结果（如调用 `read_local_document` 读取学习资料），以及 Agent 根据文档内容向用户主动提出的考核问题。
 
 ## 🛠 技术栈
 
